@@ -1,0 +1,21 @@
+# Goals, a generalized `make`
+# Install from https://copr.fedorainfracloud.org/coprs/rjones/goals/
+# Then run `goals`
+
+goal all = : update, lint, freeze, doc
+
+goal update = { python3 scripts/update.py }
+
+function dhall-files () returning strings = @{
+     find . -name "*.dhall"
+}
+
+goal dhall-fmt (file) = {
+     dhall format --ascii < %file > %file.fmt && mv %file.fmt %file
+}
+
+goal lint = : wrap ("dhall-fmt", dhall-files ())
+
+goal freeze = { dhall freeze --inplace ./package.dhall --all }
+
+goal doc = { python3 scripts/doc.py }

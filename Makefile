@@ -1,3 +1,4 @@
+# This is being deprecated and replaced by Goalfile
 all: update lint freeze doc
 
 test:
